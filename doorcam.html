@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Doorcam</title>
+		<meta name=" theme-color" content="#000000">
+		<link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAHdElNRQfjCQEKLADdDijgAAABI0lEQVQoz3XQz0vTAQCG8c9XF7jZFh7cTWhWI1iEwRiEgmyTwIEX675Dl9ghSqSILv0Lu3gQvK/CIMEfOLaYdLFTqCSYY0oEeurSoEvQZYNB23N64X3ey8sgbluA0H9FRM68pGNJn/wOeqpbCnICdVtO8EzLxwBhswpSTmyraYvIKph06oonVPz0Ugrc9NS690oS4IMg5LXHSq6KmfTdjlV/DLkODtyFkl+ynU3UQ2tOvRMg41Ug75EL+/bMyFtQtanhr/sKcnZYlndPWcKKEcQVvXWobF4Y0jZMaBiS8cYXLc/NqfRes6ju3A9VS6a01JwpIu3It64UNdpJD0yrgaxdzd4nu4w70kDcpTv9BKYMI+2FsVBf4SuIaboxbDBt13z+B9CQRZE5yW0tAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE5LTA5LTAxVDA4OjQ0OjAwKzAyOjAw7QHZXQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOS0wOS0wMVQwODo0NDowMCswMjowMJxcYeEAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAAElFTkSuQmCC"/>
+	</head>
+	<body>
+		<div id="doorcam" class="doorcam" style="background-image:url({{ url_for('video_feed') }});"></div>
+		<script src="{{ url_for('static', filename="socket.io.js")}}"></script>
+		<script>
+			var screen = document.getElementById('doorcam');
+			var activated = false;
+
+			// Always show camera
+			if (window.location.search.length === 13) {
+				activateFullscreen();
+			// Otherwise add listener for doorbell
+			} else {
+				var socket = io();
+				var timer = 30000;
+				var timeout;
+
+				socket.on('doorbell', function(action){
+					if (typeof action !== 'undefined') {
+						activateFullscreen();
+						clearTimeout(timeout);
+						timeout = setTimeout(function() {
+							deactivateFullscreen();
+						}, timer);
+					}
+				});
+			}
+
+			function activateFullscreen() {
+				activated = true;
+				screen.className = 'doorcam is-active';
+			}
+			function deactivateFullscreen() {
+				activated = false;
+				screen.className = 'doorcam';
+			}
+		</script>
+		<style>
+			html, body {
+				height: 100%;
+			}
+			body {
+				margin: 0;
+			}
+			.doorcam {
+				background-position: center;
+				background-size: cover;
+				background-repeat: no-repeat;
+				height: 100%;
+				opacity: 0;
+				transition: opacity 500ms;
+			}
+			.doorcam.is-active {
+				opacity: 1;
+			}
+		</style>
+	</body>
+</html>
