@@ -36,7 +36,7 @@ python-dateutil==2.6.1
 python-engineio==3.9.3
 python-socketio==4.3.1
 pyxdg==0.25
-PyYAML==3.12
+PyYAML==5.4
 requests==2.32.2
 RPi.GPIO==0.6.5
 SecretStorage==2.3.1
