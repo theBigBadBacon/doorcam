@@ -31,7 +31,7 @@ pycparser==2.18
 pycrypto==2.6.1
 pycurl==7.43.0
 pygobject==3.22.0
-pyOpenSSL==17.0.0
+pyOpenSSL==17.5.0
 python-dateutil==2.6.1
 python-engineio==3.9.3
 python-socketio==4.3.1
